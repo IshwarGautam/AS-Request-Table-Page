@@ -14,7 +14,9 @@ export class MyApp extends LitElement {
     ];
   }
   render() {
-    return html`<main><main-component></main-component></main>`;
+    return html`
+    
+    <main><main-component></main-component></main>`;
   }
 }
 
