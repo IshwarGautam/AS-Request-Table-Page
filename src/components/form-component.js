@@ -40,6 +40,15 @@ export class FormComponent extends LitElement {
       paper-dialog {
         overflow: scroll;
       }
+
+      #message {
+        color: red;
+        font-size: 20px;
+      }
+
+      paper-button {
+        margin-top: 20px;
+      }
     `;
   }
 
@@ -48,6 +57,7 @@ export class FormComponent extends LitElement {
       items: { type: Array },
       data: { type: Object },
       onAddRow: { type: Function },
+      value: { type: String },
     };
   }
 
@@ -73,6 +83,8 @@ export class FormComponent extends LitElement {
       status: '',
     };
 
+    this.value = '-1';
+
     // this.openDialog = this.openDialog.bind(this);
     // this.closeDialog = this.closeDialog.bind(this);
 
@@ -87,7 +99,9 @@ export class FormComponent extends LitElement {
         <h2>Add Synthesis Request</h2>
 
         <paper-dropdown-menu label="Reaction Workflow *" vertical-offset="50">
-          <paper-listbox slot="dropdown-content" class="dropdown-content">
+          <paper-listbox slot="dropdown-content" class="dropdown-content" selected = ${
+            this.value
+          }>
             ${this.option.id.map(
               (i) => html`
                 <paper-item @click=${() => this.handleChange('id', i)}
@@ -98,10 +112,12 @@ export class FormComponent extends LitElement {
           </paper-listbox>
         </paper-dropdown-menu>
 
-        <paper-input label="Request Name *"></paper-input>
+        <paper-input label="Request Name" class="input"></paper-input>
 
         <paper-dropdown-menu label="Project *" vertical-offset="50">
-          <paper-listbox slot="dropdown-content" class="dropdown-content">
+          <paper-listbox slot="dropdown-content" class="dropdown-content" selected = ${
+            this.value
+          }>
             ${this.option.project.map(
               (i) => html`
                 <paper-item @click=${() => this.handleChange('project', i)}
@@ -113,7 +129,9 @@ export class FormComponent extends LitElement {
         </paper-dropdown-menu>
 
         <paper-dropdown-menu label="Target *" vertical-offset="50">
-          <paper-listbox slot="dropdown-content" class="dropdown-content">
+          <paper-listbox slot="dropdown-content" class="dropdown-content" selected = ${
+            this.value
+          }>
           ${this.option.target.map(
             (i) => html`
               <paper-item @click=${() => this.handleChange('target', i)}
@@ -125,7 +143,9 @@ export class FormComponent extends LitElement {
         </paper-dropdown-menu>
 
         <paper-dropdown-menu label="Requested By *" vertical-offset="50">
-          <paper-listbox slot="dropdown-content" class="dropdown-content">
+          <paper-listbox slot="dropdown-content" class="dropdown-content" selected = ${
+            this.value
+          }>
           ${this.option.req_by.map(
             (i) => html`
               <paper-item @click=${() => this.handleChange('req_by', i)}
@@ -137,7 +157,9 @@ export class FormComponent extends LitElement {
         </paper-dropdown-menu>
 
         <paper-dropdown-menu label="Assignee *" vertical-offset="50">
-          <paper-listbox slot="dropdown-content" class="dropdown-content">
+          <paper-listbox slot="dropdown-content" class="dropdown-content" selected = ${
+            this.value
+          }>
           ${this.option.assignee.map(
             (i) => html`
               <paper-item @click=${() => this.handleChange('assignee', i)}
@@ -169,6 +191,13 @@ export class FormComponent extends LitElement {
       </div>
 
     </paper-dialog>
+
+    <paper-dialog id="message">
+      <p>Please fill all the required fields!</p>
+      <div class="buttons">
+        <paper-button dialog-confirm autofocus>Ok</paper-button>
+      </div>
+    </paper-dialog>
     `;
   }
 
@@ -182,16 +211,36 @@ export class FormComponent extends LitElement {
   }
 
   closeDialog() {
+    //clear all the previous selected value from form
+    this.value = String(parseInt(this.value) - 1);
+
+    const input = this.shadowRoot.querySelector('.input');
+    input.value = '';
+
     const form = this.shadowRoot.querySelector('#dialog');
     form.close();
   }
 
   addRow() {
     this.data.status = 'Queued';
-    this.onAddRow(this.data);
-    const form = this.shadowRoot.querySelector('#dialog');
-    form.close();
-    // console.log(this.data.id);
+    for (let i = 0; i < Object.keys(this.data).length; i++) {
+      if (this.data[Object.keys(this.data)[i]] === '') {
+        const msg = this.shadowRoot.querySelector('#message');
+        msg.open();
+        return;
+      }
+      if (i === Object.keys(this.data).length - 1) {
+        this.onAddRow(this.data);
+        const form = this.shadowRoot.querySelector('#dialog');
+        form.close();
+
+        //clear all the previous selected value from form
+        this.value = String(parseInt(this.value) - 1);
+
+        const input = this.shadowRoot.querySelector('.input');
+        input.value = '';
+      }
+    }
   }
 }
 

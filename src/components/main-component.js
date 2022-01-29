@@ -84,18 +84,6 @@ export class MainComponent extends LitElement {
     ];
 
     this.addRow = this.addRow.bind(this);
-
-    // this.myObj = {
-    //   id: 'hello',
-    //   project: 'jk',
-    //   target: '2/23/2022',
-    // };
-
-    // Object.keys(this.myObj).filter((k) => {
-    //   if (this.myObj[k] === '') {
-    //     return;
-    //   }
-    // });
   }
 
   addRow(data) {
