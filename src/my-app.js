@@ -8,7 +8,7 @@ export class MyApp extends LitElement {
     return [
       css`
         main {
-          
+          padding:20px;
         }
       `,
     ];
