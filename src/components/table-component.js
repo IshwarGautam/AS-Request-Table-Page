@@ -42,6 +42,29 @@ export class TableComponent extends LitElement {
         box-shadow: none;
         border: 1px solid black;
       }
+
+      iron-dropdown {
+        border: 1px solid gray;
+        background: white;
+        font-size: 20px;
+        padding: 5px;
+        cursor: pointer;
+      }
+
+      .status {
+        color: #fc2;
+        font-weight: bold;
+      }
+
+      .dot {
+        height: 10px;
+        width: 10px;
+        border-radius: 50%;
+        background-color: #fc2;
+        margin-top: 7px;
+        margin-left: -15px;
+        position: absolute;
+      }
     `;
   }
 
@@ -85,7 +108,13 @@ export class TableComponent extends LitElement {
         <vaadin-grid-column header="Needed By Date" path="by_date">
         </vaadin-grid-column>
 
-        <vaadin-grid-column header="Status" path="status"> </vaadin-grid-column>
+        <vaadin-grid-column
+          header="Status"
+          path="status"
+          .renderer=${(row, column, data) =>
+            this.renderStatus(row, column, data)}
+        >
+        </vaadin-grid-column>
       </vaadin-grid>
     `;
   }
@@ -97,22 +126,36 @@ export class TableComponent extends LitElement {
           icon="more-vert"
           @click=${this.openDropdown}
         ></paper-icon-button>
-        <paper-dialog
-          id="dialog2"
-          no-overlap
-          horizontal-align="left"
+
+        <iron-dropdown
+          id="edit-menu"
+          horizontal-align="right"
           vertical-align="top"
         >
-          Edit
-        </paper-dialog>
+          <div slot="dropdown-content" @click="${this.editableForm}">Edit</div>
+        </iron-dropdown>
       `,
       root
     );
 
     this.openDropdown = (e) => {
-      const dial2 = root.querySelector('#dialog2');
+      const dial2 = root.querySelector('#edit-menu');
       dial2.open();
     };
+
+    this.editableForm = (e) => {};
+  }
+
+  renderStatus(root, column, rowData) {
+    render(
+      html`
+        <div class="status">
+          <div class="dot"></div>
+          <div>${this.items[rowData.index].status}</div>
+        </div>
+      `,
+      root
+    );
   }
 
   // renderIcon(root, column, model){
