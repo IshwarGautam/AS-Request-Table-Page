@@ -1,37 +1,10 @@
 import { LitElement, html, css } from 'lit';
 import { render } from 'lit-html';
+import { classMap } from 'lit/directives/class-map.js';
 
 export class TableComponent extends LitElement {
   static get styles() {
     return css`
-      table {
-        border-collapse: collapse;
-        margin: 25px 10px;
-        font-size: 0.9em;
-        font-family: sans-serif;
-        min-width: 400px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-      }
-
-      th,
-      td {
-        padding: 12px 15px;
-        border: 1px solid #dddddd;
-      }
-
-      th {
-        background: rgb(229, 237, 244);
-      }
-
-      tr:nth-child(even) {
-        background-color: #f0fff0;
-      }
-
-      img {
-        width: 20px;
-        height: 20px;
-      }
-
       vaadin-grid {
         padding: 70px;
       }
@@ -52,7 +25,6 @@ export class TableComponent extends LitElement {
       }
 
       .status {
-        color: #fc2;
         font-weight: bold;
       }
 
@@ -60,10 +32,33 @@ export class TableComponent extends LitElement {
         height: 10px;
         width: 10px;
         border-radius: 50%;
-        background-color: #fc2;
         margin-top: 7px;
         margin-left: -15px;
         position: absolute;
+      }
+
+      .yellow {
+        color: #ff8c00;
+      }
+
+      .bgYellow {
+        background: #ff8c00;
+      }
+
+      .green {
+        color: green;
+      }
+
+      .bgGreen {
+        background: green;
+      }
+
+      .blue {
+        color: blue;
+      }
+
+      .bgBlue {
+        background: blue;
       }
     `;
   }
@@ -78,6 +73,8 @@ export class TableComponent extends LitElement {
     super();
 
     this.items = [];
+    this.classes1 = {};
+    this.classes2 = {};
   }
 
   render() {
@@ -85,11 +82,14 @@ export class TableComponent extends LitElement {
       <vaadin-grid .items=${this.items}>
         <vaadin-grid-column
           width="2px"
-          .renderer=${(row) => this.renderColumn(row)}
+          .renderer=${(row, column, data) =>
+            this.renderColumn(row, column, data)}
         >
         </vaadin-grid-column>
 
-        <vaadin-grid-column header="Request ID" path="id"> </vaadin-grid-column>
+        <vaadin-grid-column header="Request ID" path="id">
+          <vaadin-grid-filter path="id"></vaadin-grid-filter>
+        </vaadin-grid-column>
 
         <vaadin-grid-column header="Project" path="project">
         </vaadin-grid-column>
@@ -119,21 +119,30 @@ export class TableComponent extends LitElement {
     `;
   }
 
-  renderColumn(root) {
+  renderColumn(root, column, rowData) {
     render(
       html`
-        <paper-icon-button
-          icon="more-vert"
-          @click=${this.openDropdown}
-        ></paper-icon-button>
+        <div class="edit wrapper">
+          <paper-icon-button
+            icon="more-vert"
+            @click=${this.openDropdown}
+          ></paper-icon-button>
 
-        <iron-dropdown
-          id="edit-menu"
-          horizontal-align="right"
-          vertical-align="top"
-        >
-          <div slot="dropdown-content" @click="${this.editableForm}">Edit</div>
-        </iron-dropdown>
+          <iron-dropdown
+            id="edit-menu"
+            horizontal-align="right"
+            vertical-align="top"
+            select="${rowData.index}"
+          >
+            <div
+              slot="dropdown-content"
+              @click="${this.editableForm}"
+              id="${rowData.index}"
+            >
+              Edit
+            </div>
+          </iron-dropdown>
+        </div>
       `,
       root
     );
@@ -143,14 +152,55 @@ export class TableComponent extends LitElement {
       dial2.open();
     };
 
-    this.editableForm = (e) => {};
+    this.editableForm = (e) => {
+      // console.log(this.items[e.target.id]);
+    };
   }
 
   renderStatus(root, column, rowData) {
+    switch (this.items[rowData.index].status) {
+      case 'Queued':
+        this.classes1 = {
+          yellow: true,
+          green: false,
+          blue: false,
+        };
+        this.classes2 = {
+          bgYellow: true,
+          bgGreen: false,
+          bgBlue: false,
+        };
+        break;
+      case 'In Progress':
+        this.classes1 = {
+          yellow: false,
+          green: true,
+          blue: false,
+        };
+        this.classes2 = {
+          bgYellow: false,
+          bgGreen: true,
+          bgBlue: false,
+        };
+        break;
+      case 'Completed':
+        this.classes1 = {
+          yellow: false,
+          green: false,
+          blue: true,
+        };
+        this.classes2 = {
+          bgYellow: false,
+          bgGreen: false,
+          bgBlue: true,
+        };
+        break;
+    }
+
     render(
       html`
-        <div class="status">
-          <div class="dot"></div>
+        <div class="status ${classMap(this.classes1)}">
+          <div class="dot ${classMap(this.classes2)}"></div>
           <div>${this.items[rowData.index].status}</div>
         </div>
       `,

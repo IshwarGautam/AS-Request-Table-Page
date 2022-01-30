@@ -67,7 +67,7 @@ export class FormComponent extends LitElement {
     this.option = {
       id: ['Aspin-clone-sprint1', 'Request 01 1/18/2022', 'Aspen-Example-1'],
       project: ['HBL', 'ADCL', 'BOMD'],
-      target: ['HBL-completion', 'ADCL-completion', 'BOMD-completion'],
+      target: ['DML', 'AMQP', 'DMBA'],
       req_by: ['Ishwar Gautam', 'Bishnu Adhikari', 'Kapil Dev'],
       assignee: ['Manish Panday', 'Amit Joshi', 'Mamata Adhikari'],
     };
@@ -177,8 +177,9 @@ export class FormComponent extends LitElement {
         @value-changed=${(e) => this.handleChange('req_date', e.target.value)}>
         </vaadin-date-picker>
 
-        <vaadin-date-picker label="Requested Date *" @value-changed=${(e) =>
-          this.handleChange('by_date', e.target.value)}>
+        <vaadin-date-picker selected ="1/22/2022" label="Requested Date *"  @value-changed=${(
+          e
+        ) => this.handleChange('by_date', e.target.value)}>
         </vaadin-date-picker>
 
         </br>
