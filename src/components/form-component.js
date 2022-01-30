@@ -65,23 +65,48 @@ export class FormComponent extends LitElement {
     super();
 
     this.option = {
-      id: ['Aspin-clone-sprint1', 'Request 01 1/18/2022', 'Aspen-Example-1'],
-      project: ['HBL', 'ADCL', 'BOMD'],
-      target: ['DML', 'AMQP', 'DMBA'],
-      req_by: ['Ishwar Gautam', 'Bishnu Adhikari', 'Kapil Dev'],
-      assignee: ['Manish Panday', 'Amit Joshi', 'Mamata Adhikari'],
+      id: [
+        'Aspin-clone-sprint1',
+        'Request 01 1/18/2022',
+        'Aspen-Example-1',
+        'Mono-Cloud-extreme1',
+        'Albert-Example-II',
+        'Dice-Synthesis-2022',
+        'Mono-client-harvert',
+      ],
+      project: ['HBL', 'ADCL', 'BOMD', 'BMTC', 'TKSS', 'MORP'],
+      target: ['DML', 'AMQP', 'DMBA', 'SEVR', 'DMMP', 'BRPC'],
+      reqBy: [
+        'Ishwar Gautam',
+        'Bishnu Adhikari',
+        'Kapil Dev',
+        'Bijay Gautam',
+        'Meghnath Paudel',
+        'Sunil Acharya',
+        'Campaign Planning Admin',
+      ],
+      assignee: [
+        'Manish Panday',
+        'Amit Joshi',
+        'Mamata Adhikari',
+        'Saughat Joshi',
+        'Karan Bhusal',
+        'Simran Khatiwada',
+      ],
     };
 
     this.data = {
       id: '',
       project: '',
       target: '',
-      req_by: '',
+      reqBy: '',
       assignee: '',
-      req_date: '',
-      by_date: '',
+      reqDate: '',
+      byDate: '',
       status: '',
     };
+
+    this.emptyData = { ...this.data };
 
     this.value = '-1';
 
@@ -146,9 +171,9 @@ export class FormComponent extends LitElement {
           <paper-listbox slot="dropdown-content" class="dropdown-content" selected = ${
             this.value
           }>
-          ${this.option.req_by.map(
+          ${this.option.reqBy.map(
             (i) => html`
-              <paper-item @click=${() => this.handleChange('req_by', i)}
+              <paper-item @click=${() => this.handleChange('reqBy', i)}
                 >${i}</paper-item
               >
             `
@@ -174,12 +199,12 @@ export class FormComponent extends LitElement {
           Date.now(),
           { representation: 'date' }
         )}" 
-        @value-changed=${(e) => this.handleChange('req_date', e.target.value)}>
+        @value-changed=${(e) => this.handleChange('reqDate', e.target.value)}>
         </vaadin-date-picker>
 
-        <vaadin-date-picker selected ="1/22/2022" label="Requested Date *"  @value-changed=${(
+        <vaadin-date-picker initialPosition ='2/22/2022' label="Requested Date *"  @value-changed=${(
           e
-        ) => this.handleChange('by_date', e.target.value)}>
+        ) => this.handleChange('byDate', e.target.value)}>
         </vaadin-date-picker>
 
         </br>
@@ -220,6 +245,8 @@ export class FormComponent extends LitElement {
 
     const form = this.shadowRoot.querySelector('#dialog');
     form.close();
+
+    this.data = { ...this.emptyData };
   }
 
   addRow() {
@@ -230,6 +257,7 @@ export class FormComponent extends LitElement {
         msg.open();
         return;
       }
+
       if (i === Object.keys(this.data).length - 1) {
         this.onAddRow(this.data);
         const form = this.shadowRoot.querySelector('#dialog');
@@ -242,6 +270,7 @@ export class FormComponent extends LitElement {
         input.value = '';
       }
     }
+    this.data = { ...this.emptyData };
   }
 }
 

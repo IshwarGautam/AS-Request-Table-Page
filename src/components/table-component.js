@@ -7,6 +7,7 @@ export class TableComponent extends LitElement {
     return css`
       vaadin-grid {
         padding: 70px;
+        height: 500px;
       }
 
       #dialog2 {
@@ -96,16 +97,16 @@ export class TableComponent extends LitElement {
 
         <vaadin-grid-column header="Target" path="target"> </vaadin-grid-column>
 
-        <vaadin-grid-column header="Requested By" path="req_by">
+        <vaadin-grid-column header="Requested By" path="reqBy">
         </vaadin-grid-column>
 
         <vaadin-grid-column header="Assignee" path="assignee">
         </vaadin-grid-column>
 
-        <vaadin-grid-column header="Requested Date" path="req_date">
+        <vaadin-grid-column header="Requested Date" path="reqDate">
         </vaadin-grid-column>
 
-        <vaadin-grid-column header="Needed By Date" path="by_date">
+        <vaadin-grid-column header="Needed By Date" path="byDate">
         </vaadin-grid-column>
 
         <vaadin-grid-column
@@ -116,6 +117,8 @@ export class TableComponent extends LitElement {
         >
         </vaadin-grid-column>
       </vaadin-grid>
+
+      <form-component></form-component>
     `;
   }
 
@@ -136,7 +139,7 @@ export class TableComponent extends LitElement {
           >
             <div
               slot="dropdown-content"
-              @click="${this.editableForm}"
+              @click="${() => this.openDialog()}"
               id="${rowData.index}"
             >
               Edit
@@ -150,10 +153,6 @@ export class TableComponent extends LitElement {
     this.openDropdown = (e) => {
       const dial2 = root.querySelector('#edit-menu');
       dial2.open();
-    };
-
-    this.editableForm = (e) => {
-      // console.log(this.items[e.target.id]);
     };
   }
 
@@ -206,6 +205,11 @@ export class TableComponent extends LitElement {
       `,
       root
     );
+  }
+
+  openDialog() {
+    const dial = this.shadowRoot.querySelector('form-component');
+    dial.openDialog();
   }
 
   // renderIcon(root, column, model){

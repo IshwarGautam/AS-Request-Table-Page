@@ -38,6 +38,10 @@ export class MainComponent extends LitElement {
         font-size: 60px;
         text-align: center;
       }
+
+      h2 {
+        font-family: 'arial';
+      }
     `;
   }
 
@@ -55,30 +59,30 @@ export class MainComponent extends LitElement {
         id: 'Aspin-clone-sprint1',
         project: 'HBL',
         target: 'DML',
-        req_by: 'Ishwar Gautam',
+        reqBy: 'Ishwar Gautam',
         assignee: 'Manish Panday',
-        req_date: '02-05-2022',
-        by_date: '02-06-2022',
+        reqDate: '02-05-2022',
+        byDate: '02-06-2022',
         status: 'Queued',
       },
       {
         id: 'Request 01 1/18/2022',
         project: 'ADCL',
         target: 'AMQP',
-        req_by: 'Bishnu Adhikari',
+        reqBy: 'Bishnu Adhikari',
         assignee: 'Amit Joshi',
-        req_date: '02-01-2022',
-        by_date: '02-05-2022',
+        reqDate: '02-01-2022',
+        byDate: '02-05-2022',
         status: 'In Progress',
       },
       {
         id: 'Aspen-Example-1',
         project: 'BOMD',
         target: 'DMBA',
-        req_by: 'Kapil Dev',
+        reqBy: 'Kapil Dev',
         assignee: 'Mamata Adhikari',
-        req_date: '01-30-2022',
-        by_date: '02-01-2022',
+        reqDate: '01-30-2022',
+        byDate: '02-01-2022',
         status: 'Completed',
       },
     ];
@@ -92,6 +96,7 @@ export class MainComponent extends LitElement {
 
   render() {
     return html`
+      <h2>Automated Synthesis Request</h2>
       <table-component .items=${this.items}></table-component>
       <form-component .onAddRow=${this.addRow}></form-component>
 
