@@ -80,7 +80,7 @@ export class TableComponent extends LitElement {
 
   render() {
     return html`
-      <vaadin-grid .items=${this.items}>
+      <vaadin-grid .items=${this.items} theme="column-borders">
         <vaadin-grid-column
           width="2px"
           .renderer=${(row, column, data) =>
@@ -88,11 +88,11 @@ export class TableComponent extends LitElement {
         >
         </vaadin-grid-column>
 
-        <vaadin-grid-column header="Request ID" path="id">
-          <vaadin-grid-filter path="id"></vaadin-grid-filter>
-        </vaadin-grid-column>
+        <vaadin-grid-sort-column header="Request ID" path="id">
+        </vaadin-grid-sort-column>
 
         <vaadin-grid-column header="Project" path="project">
+          <vaadin-grid-filter path="project"></vaadin-grid-filter>
         </vaadin-grid-column>
 
         <vaadin-grid-column header="Target" path="target"> </vaadin-grid-column>

@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 
 import '../components/table-component.js';
 import '../components/form-component.js';
+import '../components/add-component.js';
 
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-item/paper-item.js';
@@ -15,30 +16,14 @@ import '@polymer/paper-dialog/paper-dialog.js';
 import '@polymer/iron-dropdown/iron-dropdown.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/iron-icons/iron-icons.js';
+import '@vaadin/vaadin-grid/vaadin-grid-sort-column.js';
+import '@vaadin/vaadin-grid/vaadin-grid-filter.js';
+
+// import '@vaadin/combo-box';
 
 export class MainComponent extends LitElement {
   static get styles() {
     return css`
-      paper-button {
-        margin-top: 20px;
-      }
-
-      .plusBtn {
-        width: 70px;
-        height: 70px;
-        background: rgb(255, 0, 109);
-        border-radius: 50%;
-        cursor: pointer;
-        float: right;
-        bottom: 0;
-      }
-
-      .btn {
-        color: ivory;
-        font-size: 60px;
-        text-align: center;
-      }
-
       h2 {
         font-family: 'arial';
       }
@@ -61,8 +46,8 @@ export class MainComponent extends LitElement {
         target: 'DML',
         reqBy: 'Ishwar Gautam',
         assignee: 'Manish Panday',
-        reqDate: '02-05-2022',
-        byDate: '02-06-2022',
+        reqDate: '2022-02-05',
+        byDate: '2022-02-06',
         status: 'Queued',
       },
       {
@@ -71,8 +56,8 @@ export class MainComponent extends LitElement {
         target: 'AMQP',
         reqBy: 'Bishnu Adhikari',
         assignee: 'Amit Joshi',
-        reqDate: '02-01-2022',
-        byDate: '02-05-2022',
+        reqDate: '2022-02-01',
+        byDate: '2022-02-05',
         status: 'In Progress',
       },
       {
@@ -81,8 +66,8 @@ export class MainComponent extends LitElement {
         target: 'DMBA',
         reqBy: 'Kapil Dev',
         assignee: 'Mamata Adhikari',
-        reqDate: '01-30-2022',
-        byDate: '02-01-2022',
+        reqDate: '2022-01-30',
+        byDate: '2022=02-01',
         status: 'Completed',
       },
     ];
@@ -98,23 +83,9 @@ export class MainComponent extends LitElement {
     return html`
       <h2>Automated Synthesis Request</h2>
       <table-component .items=${this.items}></table-component>
-      <form-component .onAddRow=${this.addRow}></form-component>
-
-      <paper-button class="plusBtn" @click="${() => this.openDialog()}">
-        <div class="btn">+</div>
-      </paper-button>
+      <add-component .onAddRow=${this.addRow}></add-component>
     `;
   }
-
-  openDialog() {
-    const dial = this.shadowRoot.querySelector('form-component');
-    dial.openDialog();
-  }
-
-  // closeDialog() {
-  //   const form = this.shadowRoot.querySelector('form-component');
-  //   form.closeDialog();
-  // }
 }
 
 customElements.define('main-component', MainComponent);

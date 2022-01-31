@@ -101,8 +101,8 @@ export class FormComponent extends LitElement {
       target: '',
       reqBy: '',
       assignee: '',
-      reqDate: '',
-      byDate: '',
+      reqDate: '2022-02-02',
+      byDate: '2022-02-02',
       status: '',
     };
 
@@ -202,7 +202,7 @@ export class FormComponent extends LitElement {
         @value-changed=${(e) => this.handleChange('reqDate', e.target.value)}>
         </vaadin-date-picker>
 
-        <vaadin-date-picker initialPosition ='2/22/2022' label="Requested Date *"  @value-changed=${(
+        <vaadin-date-picker selected ='2022-01-30' label="Requested Date *"  @value-changed=${(
           e
         ) => this.handleChange('byDate', e.target.value)}>
         </vaadin-date-picker>
