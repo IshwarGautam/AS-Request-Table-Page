@@ -26,7 +26,9 @@ export class AddComponent extends LitElement {
   }
 
   static get properties() {
-    return {};
+    return {
+      toggleAutomatedSynthesisDialog: { type: Function },
+    };
   }
 
   constructor() {
@@ -35,23 +37,14 @@ export class AddComponent extends LitElement {
 
   render() {
     return html`
-      <paper-button class="plusBtn" @click="${() => this.openDialog()}">
+      <paper-button
+        class="plusBtn"
+        @click="${() => this.toggleAutomatedSynthesisDialog()}"
+      >
         <div class="btn">+</div>
       </paper-button>
-
-      <form-component .onAddRow=${this.onAddRow}></form-component>
     `;
   }
-
-  openDialog() {
-    const dial = this.shadowRoot.querySelector('form-component');
-    dial.openDialog();
-  }
-
-  // closeDialog() {
-  //   const form = this.shadowRoot.querySelector('form-component');
-  //   form.closeDialog();
-  // }
 }
 
 customElements.define('add-component', AddComponent);

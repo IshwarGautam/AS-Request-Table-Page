@@ -4,18 +4,11 @@ import { formatISO } from 'date-fns';
 export class FormComponent extends LitElement {
   static get styles() {
     return css`
-      paper-dropdown-menu,
-      paper-input {
-        width: 600px;
-        display: block;
-      }
-
-      .dropdown-content,
       vaadin-date-picker {
         width: 600px;
       }
 
-      .addBtn {
+      .mainBtn {
         background: rgb(255, 0, 109);
         color: ivory;
       }
@@ -49,6 +42,15 @@ export class FormComponent extends LitElement {
       paper-button {
         margin-top: 20px;
       }
+
+      vaadin-combo-box {
+        width: 100%;
+      }
+
+      vaadin-combo-box::before,
+      vaadin-combo-box::after {
+        display: none !important;
+      }
     `;
   }
 
@@ -56,8 +58,11 @@ export class FormComponent extends LitElement {
     return {
       items: { type: Array },
       data: { type: Object },
-      onAddRow: { type: Function },
+      onChangeTable: { type: Function },
       value: { type: String },
+      dialogOpen: { type: Boolean },
+      toggleAutomatedSynthesisDialog: { type: Function },
+      purpose: { type: String },
     };
   }
 
@@ -93,137 +98,105 @@ export class FormComponent extends LitElement {
         'Karan Bhusal',
         'Simran Khatiwada',
       ],
+      status: ['Queued', 'In Progress', 'Completed'],
     };
-
-    this.data = {
-      id: '',
-      project: '',
-      target: '',
-      reqBy: '',
-      assignee: '',
-      reqDate: '2022-02-02',
-      byDate: '2022-02-02',
-      status: '',
-    };
-
-    this.emptyData = { ...this.data };
-
-    this.value = '-1';
 
     // this.openDialog = this.openDialog.bind(this);
     // this.closeDialog = this.closeDialog.bind(this);
 
-    // this.onAddRow = () => {};
+    // this.onChangeTable = () => {};
   }
 
   render() {
     return html`
+      <paper-dialog modal opened id="dialog">
+        <div class="form">
+          <h2>${this.purpose} Synthesis Request</h2>
 
-    <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-      <div class="form">
-        <h2>Add Synthesis Request</h2>
+          <vaadin-combo-box
+            .value="${this.data.id}"
+            label="Reaction Workflow *"
+            .items="${this.option.id}"
+            @change="${(e) => this.handleChange('id', e.target.value)}"
+          >
+          </vaadin-combo-box>
 
-        <paper-dropdown-menu label="Reaction Workflow *" vertical-offset="50">
-          <paper-listbox slot="dropdown-content" class="dropdown-content" selected = ${
-            this.value
-          }>
-            ${this.option.id.map(
-              (i) => html`
-                <paper-item @click=${() => this.handleChange('id', i)}
-                  >${i}</paper-item
-                >
-              `
-            )}
-          </paper-listbox>
-        </paper-dropdown-menu>
+          <paper-input label="Request Name" class="input"></paper-input>
 
-        <paper-input label="Request Name" class="input"></paper-input>
+          <vaadin-combo-box
+            .value="${this.data.project}"
+            label="Project *"
+            .items="${this.option.project}"
+            @change="${(e) => this.handleChange('project', e.target.value)}"
+          >
+          </vaadin-combo-box>
 
-        <paper-dropdown-menu label="Project *" vertical-offset="50">
-          <paper-listbox slot="dropdown-content" class="dropdown-content" selected = ${
-            this.value
-          }>
-            ${this.option.project.map(
-              (i) => html`
-                <paper-item @click=${() => this.handleChange('project', i)}
-                  >${i}</paper-item
-                >
-              `
-            )}
-          </paper-listbox>
-        </paper-dropdown-menu>
+          <vaadin-combo-box
+            .value="${this.data.target}"
+            label="Target *"
+            .items="${this.option.target}"
+            @change="${(e) => this.handleChange('target', e.target.value)}"
+          >
+          </vaadin-combo-box>
 
-        <paper-dropdown-menu label="Target *" vertical-offset="50">
-          <paper-listbox slot="dropdown-content" class="dropdown-content" selected = ${
-            this.value
-          }>
-          ${this.option.target.map(
-            (i) => html`
-              <paper-item @click=${() => this.handleChange('target', i)}
-                >${i}</paper-item
-              >
-            `
-          )}
-          </paper-listbox>
-        </paper-dropdown-menu>
+          <vaadin-combo-box
+            .value="${this.data.reqBy}"
+            label="Requested By *"
+            .items="${this.option.reqBy}"
+            @change="${(e) => this.handleChange('reqBy', e.target.value)}"
+          >
+          </vaadin-combo-box>
 
-        <paper-dropdown-menu label="Requested By *" vertical-offset="50">
-          <paper-listbox slot="dropdown-content" class="dropdown-content" selected = ${
-            this.value
-          }>
-          ${this.option.reqBy.map(
-            (i) => html`
-              <paper-item @click=${() => this.handleChange('reqBy', i)}
-                >${i}</paper-item
-              >
-            `
-          )}
-          </paper-listbox>
-        </paper-dropdown-menu>
+          <vaadin-combo-box
+            .value="${this.data.assignee}"
+            label="Assignee *"
+            .items="${this.option.assignee}"
+            @change="${(e) => this.handleChange('assignee', e.target.value)}"
+          >
+          </vaadin-combo-box>
 
-        <paper-dropdown-menu label="Assignee *" vertical-offset="50">
-          <paper-listbox slot="dropdown-content" class="dropdown-content" selected = ${
-            this.value
-          }>
-          ${this.option.assignee.map(
-            (i) => html`
-              <paper-item @click=${() => this.handleChange('assignee', i)}
-                >${i}</paper-item
-              >
-            `
-          )}
-          </paper-listbox>
-        </paper-dropdown-menu>
+          <vaadin-date-picker
+            .value=${this.data.reqDate}
+            label="Needed By Date *"
+            @value-changed=${(e) =>
+              this.handleChange('reqDate', e.target.value)}
+          >
+          </vaadin-date-picker>
 
-        <vaadin-date-picker label="Needed By Date *" .min="${formatISO(
-          Date.now(),
-          { representation: 'date' }
-        )}" 
-        @value-changed=${(e) => this.handleChange('reqDate', e.target.value)}>
-        </vaadin-date-picker>
+          <vaadin-date-picker
+            .value=${this.data.byDate}
+            label="Requested Date *"
+            @value-changed=${(e) => this.handleChange('byDate', e.target.value)}
+          >
+          </vaadin-date-picker>
 
-        <vaadin-date-picker selected ='2022-01-30' label="Requested Date *"  @value-changed=${(
-          e
-        ) => this.handleChange('byDate', e.target.value)}>
-        </vaadin-date-picker>
+          <vaadin-combo-box
+            .value="${this.data.status}"
+            label="Status *"
+            .items="${this.option.status}"
+            @change="${(e) => this.handleChange('status', e.target.value)}"
+          >
+          </vaadin-combo-box>
 
-        </br>
-        <paper-button toggles raised class="addBtn" @click = ${
-          this.addRow
-        }>ADD</paper-button>
-        <paper-button toggles raised @click = ${
-          this.closeDialog
-        }>CANCEL</paper-button>
-      </div>
+          <paper-button
+            toggles
+            raised
+            class="mainBtn"
+            @click=${this.changeTable}
+            >${this.purpose}</paper-button
+          >
+          <paper-button toggles raised @click=${this.closeDialog}
+            >Cancel</paper-button
+          >
+        </div>
+      </paper-dialog>
 
-    </paper-dialog>
-
-    <paper-dialog id="message">
-      <p>Please fill all the required fields!</p>
-      <div class="buttons">
-        <paper-button dialog-confirm autofocus>Ok</paper-button>
-      </div>
-    </paper-dialog>
+      <paper-dialog id="message">
+        <p>Please fill all the required fields!</p>
+        <div class="buttons">
+          <paper-button dialog-confirm autofocus>Ok</paper-button>
+        </div>
+      </paper-dialog>
     `;
   }
 
@@ -231,26 +204,13 @@ export class FormComponent extends LitElement {
     this.data = { ...this.data, [key]: item };
   }
 
-  openDialog() {
-    const dial = this.shadowRoot.querySelector('#dialog');
-    dial.open();
-  }
-
   closeDialog() {
-    //clear all the previous selected value from form
-    this.value = String(parseInt(this.value) - 1);
-
-    const input = this.shadowRoot.querySelector('.input');
-    input.value = '';
-
-    const form = this.shadowRoot.querySelector('#dialog');
-    form.close();
+    this.toggleAutomatedSynthesisDialog();
 
     this.data = { ...this.emptyData };
   }
 
-  addRow() {
-    this.data.status = 'Queued';
+  changeTable() {
     for (let i = 0; i < Object.keys(this.data).length; i++) {
       if (this.data[Object.keys(this.data)[i]] === '') {
         const msg = this.shadowRoot.querySelector('#message');
@@ -259,15 +219,9 @@ export class FormComponent extends LitElement {
       }
 
       if (i === Object.keys(this.data).length - 1) {
-        this.onAddRow(this.data);
+        this.onChangeTable(this.purpose, this.data);
         const form = this.shadowRoot.querySelector('#dialog');
         form.close();
-
-        //clear all the previous selected value from form
-        this.value = String(parseInt(this.value) - 1);
-
-        const input = this.shadowRoot.querySelector('.input');
-        input.value = '';
       }
     }
     this.data = { ...this.emptyData };

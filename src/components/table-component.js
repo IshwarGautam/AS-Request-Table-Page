@@ -18,11 +18,10 @@ export class TableComponent extends LitElement {
       }
 
       iron-dropdown {
-        border: 1px solid gray;
-        background: white;
         font-size: 20px;
-        padding: 5px;
+        padding: 10px;
         cursor: pointer;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
       }
 
       .status {
@@ -61,12 +60,23 @@ export class TableComponent extends LitElement {
       .bgBlue {
         background: blue;
       }
+
+      .edit-wrapper {
+        position: relative;
+      }
+
+      #iron-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+      }
     `;
   }
 
   static get properties() {
     return {
       items: { type: Array },
+      onChangeTable: { type: Function },
     };
   }
 
@@ -118,43 +128,42 @@ export class TableComponent extends LitElement {
         </vaadin-grid-column>
       </vaadin-grid>
 
-      <form-component></form-component>
+      <div id="iron-wrapper">
+        <iron-dropdown id="edit-menu">
+          <div slot="dropdown-content" @click="${this.editDialog}">Edit</div>
+        </iron-dropdown>
+      </div>
     `;
   }
+
+  editDialog = (e) => {
+    console.log(e);
+    // console.log(this.data);
+    // console.log(this.index);
+    // this.onEditPress(this.data, this.index);
+  };
 
   renderColumn(root, column, rowData) {
     render(
       html`
-        <div class="edit wrapper">
+        <div class="edit-wrapper">
           <paper-icon-button
             icon="more-vert"
             @click=${this.openDropdown}
           ></paper-icon-button>
-
-          <iron-dropdown
-            id="edit-menu"
-            horizontal-align="right"
-            vertical-align="top"
-            select="${rowData.index}"
-          >
-            <div
-              slot="dropdown-content"
-              @click="${() => this.openDialog()}"
-              id="${rowData.index}"
-            >
-              Edit
-            </div>
-          </iron-dropdown>
         </div>
       `,
       root
     );
-
-    this.openDropdown = (e) => {
-      const dial2 = root.querySelector('#edit-menu');
-      dial2.open();
-    };
   }
+
+  openDropdown = (e) => {
+    const dial2 = this.shadowRoot.querySelector('#edit-menu');
+    const wrapper = this.shadowRoot.querySelector('#iron-wrapper');
+    wrapper.style.top = e.y + 'px';
+    wrapper.style.left = e.x + 'px';
+    dial2.open();
+  };
 
   renderStatus(root, column, rowData) {
     switch (this.items[rowData.index].status) {
@@ -206,17 +215,6 @@ export class TableComponent extends LitElement {
       root
     );
   }
-
-  openDialog() {
-    const dial = this.shadowRoot.querySelector('form-component');
-    dial.openDialog();
-  }
-
-  // renderIcon(root, column, model){
-  //   render(html`
-  //     <paper-icon-button icon="filter-list"></paper-icon-button>
-  //   `,column);
-  // }
 }
 
 customElements.define('table-component', TableComponent);
