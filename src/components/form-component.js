@@ -1,8 +1,12 @@
 import { LitElement, html, css } from 'lit';
-import { formatISO } from 'date-fns';
 
 export class FormComponent extends LitElement {
   static get styles() {
+    /**
+     * Get styles for form component
+     *
+     * @returns {css}
+     */
     return css`
       vaadin-date-picker {
         width: 600px;
@@ -14,7 +18,6 @@ export class FormComponent extends LitElement {
       }
 
       .form {
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
         width: 600px;
         margin: auto;
         padding: 20px;
@@ -47,13 +50,18 @@ export class FormComponent extends LitElement {
         width: 100%;
       }
 
-      vaadin-combo-box::before,
-      vaadin-combo-box::after {
-        display: none !important;
+      .clear {
+        float: right;
+        margin-top: -50px;
       }
     `;
   }
 
+  /**
+   *Sets properties of the components
+   *
+   * @returns {Object} - that contains all the properties
+   */
   static get properties() {
     return {
       items: { type: Array },
@@ -63,55 +71,30 @@ export class FormComponent extends LitElement {
       dialogOpen: { type: Boolean },
       toggleAutomatedSynthesisDialog: { type: Function },
       purpose: { type: String },
+      option: { type: Object },
     };
   }
 
   constructor() {
     super();
-
-    this.option = {
-      id: [
-        'Aspin-clone-sprint1',
-        'Request 01 1/18/2022',
-        'Aspen-Example-1',
-        'Mono-Cloud-extreme1',
-        'Albert-Example-II',
-        'Dice-Synthesis-2022',
-        'Mono-client-harvert',
-      ],
-      project: ['HBL', 'ADCL', 'BOMD', 'BMTC', 'TKSS', 'MORP'],
-      target: ['DML', 'AMQP', 'DMBA', 'SEVR', 'DMMP', 'BRPC'],
-      reqBy: [
-        'Ishwar Gautam',
-        'Bishnu Adhikari',
-        'Kapil Dev',
-        'Bijay Gautam',
-        'Meghnath Paudel',
-        'Sunil Acharya',
-        'Campaign Planning Admin',
-      ],
-      assignee: [
-        'Manish Panday',
-        'Amit Joshi',
-        'Mamata Adhikari',
-        'Saughat Joshi',
-        'Karan Bhusal',
-        'Simran Khatiwada',
-      ],
-      status: ['Queued', 'In Progress', 'Completed'],
-    };
-
-    // this.openDialog = this.openDialog.bind(this);
-    // this.closeDialog = this.closeDialog.bind(this);
-
-    // this.onChangeTable = () => {};
+    this.option = {};
   }
 
+  /** Renders the component
+   *
+   * @returns {html}
+   */
   render() {
     return html`
       <paper-dialog modal opened id="dialog">
         <div class="form">
           <h2>${this.purpose} Synthesis Request</h2>
+          <div class="clear">
+            <paper-icon-button
+              icon="clear"
+              @click=${this.closeDialog}
+            ></paper-icon-button>
+          </div>
 
           <vaadin-combo-box
             .value="${this.data.id}"
@@ -200,16 +183,23 @@ export class FormComponent extends LitElement {
     `;
   }
 
+  /** When dropdown content from form is selected
+   *
+   * @param {String} key - unique key
+   * @param {String} item - selected value
+   */
   handleChange(key, item) {
     this.data = { ...this.data, [key]: item };
   }
 
+  //close the dialog
   closeDialog() {
     this.toggleAutomatedSynthesisDialog();
 
     this.data = { ...this.emptyData };
   }
 
+  // Make changes to table
   changeTable() {
     for (let i = 0; i < Object.keys(this.data).length; i++) {
       if (this.data[Object.keys(this.data)[i]] === '') {

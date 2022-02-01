@@ -2,47 +2,43 @@ import { LitElement, html, css } from 'lit';
 
 export class AddComponent extends LitElement {
   static get styles() {
+    /**
+     * Get styles for add component
+     *
+     * @returns {css}
+     */
     return css`
-      paper-button {
-        margin-top: 20px;
-      }
-
-      .plusBtn {
-        width: 70px;
-        height: 70px;
-        background: rgb(255, 0, 109);
-        border-radius: 50%;
-        cursor: pointer;
+      paper-icon-button {
+        width: 100px;
+        height: 100px;
+        color: rgb(255, 0, 109);
         float: right;
         bottom: 0;
-      }
-
-      .btn {
-        color: ivory;
-        font-size: 60px;
-        text-align: center;
       }
     `;
   }
 
+  /**
+   *Sets properties of the components
+   *
+   * @returns {Object} - that contains all the properties
+   */
   static get properties() {
     return {
       toggleAutomatedSynthesisDialog: { type: Function },
     };
   }
 
-  constructor() {
-    super();
-  }
-
+  /** Renders the component
+   *
+   * @returns {html}
+   */
   render() {
     return html`
-      <paper-button
-        class="plusBtn"
+      <paper-icon-button
+        icon="add-circle"
         @click="${() => this.toggleAutomatedSynthesisDialog()}"
-      >
-        <div class="btn">+</div>
-      </paper-button>
+      ></paper-icon-button>
     `;
   }
 }

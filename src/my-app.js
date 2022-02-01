@@ -3,20 +3,18 @@ import { LitElement, html, css } from 'lit';
 import './components/main-component';
 
 export class MyApp extends LitElement {
-  
   static get styles() {
     return [
       css`
         main {
-          padding:20px;
+          padding: 20px;
+          height: 600px;
         }
       `,
     ];
   }
   render() {
-    return html`
-    
-    <main><main-component></main-component></main>`;
+    return html` <main><main-component></main-component></main>`;
   }
 }
 
